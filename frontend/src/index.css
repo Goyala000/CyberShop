@@ -1,0 +1,88 @@
+/*********** Default **********/
+p {
+    font-size: 18px;
+}
+
+@media (min-width: 992px) {
+    .navbar {
+        height: 80px;
+    }
+    .nav-link, .navbar-brand {
+        margin-bottom: 6px;
+    }
+}
+
+
+/********** Card ********/
+.card {
+    height: 375px;
+}
+
+
+/********** Product Name ********/
+.productName {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.productName:hover {
+    color: red;
+}
+
+
+/****** Password Toggler *******/
+.eye {
+    position: absolute;
+    right: 5%;
+}
+
+
+/* Login Form */
+.loginForm {
+    padding-top: 50px;
+}
+
+
+/* Product Price */
+.price {
+    font-weight: bold;
+    cursor: default
+}
+
+/* Rating */
+.rating {
+    color: blue;
+    font-weight: bold;
+}
+
+/* Product Screen */
+.prodctScreen {
+    padding-top: 50px;
+}
+
+
+/* Empty Cart */
+.cartImg {
+    display: block;
+    margin: auto;
+}
+
+.noCart {
+    padding-top: 50px;
+}
+
+.emptyCartText {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.emptyCartText button {
+    margin-top: 10px;
+}
+
+.circle-icon {
+    padding: 25px;
+    border-radius: 60%;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
+    margin: 28px 40px 25px 40px;
+}
