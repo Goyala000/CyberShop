@@ -13,6 +13,8 @@ import Shipping from './layouts/Shipping';
 import Payment from './layouts/Payment';
 import Confirmation from './layouts/Confirmation';
 import Orders from './layouts/Orders';
+import EsewaSuccess from './layouts/contents/EsewaSuccess';
+import EsewaFail from './layouts/contents/EsewaFail';
 
 
 const App = props => {
@@ -30,6 +32,8 @@ const App = props => {
                     <Route path='/payment' component={Payment} />
                     <Route path='/confirmation' component={Confirmation} />
                     <Route path='/order/:id' component={Orders} />
+                    <Route path='/esewa/success' component={EsewaSuccess} />
+                    <Route path='/esewa/fail' component={EsewaFail} />
                 </div>
         </Router>     
     );

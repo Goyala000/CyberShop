@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
 import Message from './contents/Message';
 import { createOrder, getOrderDetails } from '../../actions/orderActions';
+import Esewa from './contents/Esewa';
 
 const Orders = ({ match }) => {
     const orderId = match.params.id;
@@ -13,11 +14,23 @@ const Orders = ({ match }) => {
     const orderDetails = useSelector((state) => state.orderDetails)
     const { order, loading, error } = orderDetails;
 
+    if(!loading) {
+        // Calculate prices
+        const addDecimals = (num) => {
+            return (Math.round(num*100)/100).toFixed(2)
+        };
+
+        order.itemsPrice = addDecimals(
+            order.orderItems.reduce((acc,item) => acc + item.price * item.qty, 0)
+        )
+    }
+
+    
+    
 
     useEffect(() => {
         dispatch(getOrderDetails(orderId))
-        console.log(orderId)
-    }, [])
+    }, [dispatch, orderId])
     
     return loading ? <loading /> : error ? <Message>{error}</Message> : <>
         <h2>Order { order._id}</h2>
@@ -26,6 +39,10 @@ const Orders = ({ match }) => {
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <h2>Shipping</h2>
+                            <div>
+                                <strong>Name: </strong>{order.user.name}
+                                <strong>Email: </strong><a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+                            </div>
                             <p>
                                 <strong>
                                 <i className="fas fa-home mr-2" />
@@ -38,6 +55,8 @@ const Orders = ({ match }) => {
                             <i className="fas fa-phone mr-2" />
                                 {order.shippingAddress.phoneNumber} 
                             </p>
+                            {order.isDelivered ? <Message variant='sucess'>Delivered on {order.deliveredAt}</Message> :
+                            <Message variant="danger">Not Delivered</Message>}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
@@ -49,11 +68,13 @@ const Orders = ({ match }) => {
                                 </strong>
                                 {'  '}{order.paymentMethod}
                             </p>
+                            {order.isPaid ? <Message variant='sucess'>Paid on {order.paidAt}</Message> :
+                            <Message variant="danger">Not Paid</Message>}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
                             <h2>Order Items</h2>
-                            {order.orderItems.length === 0 ? <Message>Your Cart is Empty</Message> : (
+                            {order.orderItems.length === 0 ? <Message>Order is Empty</Message> : (
                                 <ListGroup variant="flush">
                                     {order.orderItems.map((item, index) => (
                                         <ListGroup.Item key={index}>
@@ -109,8 +130,8 @@ const Orders = ({ match }) => {
                                     <Col>Rs.{order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
-                            
                         </ListGroup>
+                            <Esewa amount="100" id="100"></Esewa>
                     </Card>
                 </Col>
             </Row> 
