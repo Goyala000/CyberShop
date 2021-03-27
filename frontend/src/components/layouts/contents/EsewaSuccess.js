@@ -24,11 +24,12 @@ const EsewaSuccess = ({ match, history }) => {
     const { order, loading, error } = orderDetails;
 
     const orderPay = useSelector((state) => state.orderPay)
-    const { loading:loadingPay, success:successPay } = orderPay;
+    const { loading:loadingPay, success } = orderPay;
 
 
 
     useEffect(() => { 
+        const oId = window.location.search.split("=")[1].split("&")[0];
         const refId = window.location.search.split("=")[3];
         if(userInfo && orderId) {
             const paymentResult = {
@@ -38,17 +39,17 @@ const EsewaSuccess = ({ match, history }) => {
                 email_address: userInfo.email
             }
 
-            if(!order || successPay) {
+            if(!order || success) {
                 dispatch(getOrderDetails(orderId))
             } else {
-                const res = axios.post(`https://cors-anywhere.herokuapp.com/https://uat.esewa.com.np/epay/transrec?amt=${cart.totalPrice}.00&rid=${refId}&pid=${orderId}&scd=EPAYTEST`)
+                const res = axios.post(`https://cors-anywhere.herokuapp.com/https://uat.esewa.com.np/epay/transrec?amt=${cart.totalPrice}.00&rid=${refId}&pid=${oId}&scd=EPAYTEST`)
                 .then((res) => {
                     return res.data;
                 }).then((str) => {
                     const check = str[27];
                     if(check.toLowerCase() === "s") {
                         dispatch(payOrder(orderId, paymentResult));
-                        if(successPay) {
+                        if(success) {
                             history.push(`/order/${orderId}`);
                         } else {
                             history.push(`/order/${orderId}`);
@@ -58,7 +59,7 @@ const EsewaSuccess = ({ match, history }) => {
             }
         }
 
-    },[successPay, order])
+    },[success, order, dispatch])
     return (
         <div>
             <h2>Please wait for a while...</h2>

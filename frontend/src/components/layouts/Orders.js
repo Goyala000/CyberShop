@@ -131,7 +131,7 @@ const Orders = ({ match }) => {
                                 </Row>
                             </ListGroup.Item>
                         </ListGroup>
-                            <Esewa amount="100" id="100"></Esewa>
+                            <Esewa amount="400" id="4000"></Esewa>
                     </Card>
                 </Col>
             </Row> 

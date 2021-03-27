@@ -1,9 +1,15 @@
 import express from 'express';
-import { addOrderItems, getOrderById, updateOrderToPaid } from '../controllers/orderController.js';
+import { 
+    addOrderItems, 
+    getOrderById, 
+    updateOrderToPaid,
+    getMyOrders 
+} from '../controllers/orderController.js';
 const router = express.Router();
 import { protect } from '../middleware/authMiddleware.js';
 
 router.route('/').post(protect, addOrderItems);
+router.route('/myorders').post(protect, getMyOrders);
 router.route('/:id').get(protect, getOrderById);
 router.route('/:id/pay').put(protect, updateOrderToPaid);
 
