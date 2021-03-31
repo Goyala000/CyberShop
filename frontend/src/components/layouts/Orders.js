@@ -24,8 +24,6 @@ const Orders = ({ match }) => {
             order.orderItems.reduce((acc,item) => acc + item.price * item.qty, 0)
         )
     }
-
-    
     
 
     useEffect(() => {
@@ -131,7 +129,11 @@ const Orders = ({ match }) => {
                                 </Row>
                             </ListGroup.Item>
                         </ListGroup>
-                            <Esewa amount="400" id="4000"></Esewa>
+                        {!order.isPaid && (
+                            <ListGroup.Item>
+                                <Esewa amount="400" id={orderId} />
+                            </ListGroup.Item>
+                        )}
                     </Card>
                 </Col>
             </Row> 

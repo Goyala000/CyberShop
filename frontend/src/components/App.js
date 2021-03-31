@@ -9,12 +9,16 @@ import Login from './layouts/Login';
 import Register from './layouts/Register';
 import CartScreen from './layouts/CartScreen';
 import UserProfile from './layouts/UserProfile';
+import AdminUserList from './layouts/AdminUserList';
+import AdminUserEdit from './layouts/AdminUserEdit';
 import Shipping from './layouts/Shipping';
 import Payment from './layouts/Payment';
 import Confirmation from './layouts/Confirmation';
 import Orders from './layouts/Orders';
 import EsewaSuccess from './layouts/contents/EsewaSuccess';
 import EsewaFail from './layouts/contents/EsewaFail';
+import AdminProductList from './layouts/AdminProductList';
+import AdminProductEdit from './layouts/AdminProductEdit';
 
 
 const App = props => {
@@ -34,6 +38,11 @@ const App = props => {
                     <Route path='/order/:id' component={Orders} />
                     <Route path='/esewa/success' component={EsewaSuccess} />
                     <Route path='/esewa/fail' component={EsewaFail} />
+
+                    <Route path='/admin/userList' component={AdminUserList} />
+                    <Route path='/admin/user/:id/edit' component={AdminUserEdit} />
+                    <Route path='/admin/productList' component={AdminProductList} />
+                    <Route path='/admin/product/:id/edit' component={AdminProductEdit} />
                 </div>
         </Router>     
     );

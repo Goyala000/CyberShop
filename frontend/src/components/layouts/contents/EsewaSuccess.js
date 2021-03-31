@@ -2,7 +2,6 @@ import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getOrderDetails, payOrder } from '../../../actions/orderActions';
-import Spinner from '../contents/Spinner';
 
 const EsewaSuccess = ({ match, history }) => {
     const cart = useSelector(state => state.cart)
@@ -12,8 +11,6 @@ const EsewaSuccess = ({ match, history }) => {
     cart.shippingPrice = 0;
     cart.taxPrice = 0;
     cart.totalPrice = Number(cart.itemsPrice)+  Number(cart.shippingPrice) +  Number(cart.taxPrice);
-
-    const orderId = match.params.id
 
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin;
@@ -26,10 +23,8 @@ const EsewaSuccess = ({ match, history }) => {
     const orderPay = useSelector((state) => state.orderPay)
     const { loading:loadingPay, success } = orderPay;
 
-
-
     useEffect(() => { 
-        const oId = window.location.search.split("=")[1].split("&")[0];
+        const orderId = window.location.search.split("=")[1].split("&")[0];
         const refId = window.location.search.split("=")[3];
         if(userInfo && orderId) {
             const paymentResult = {
@@ -38,11 +33,12 @@ const EsewaSuccess = ({ match, history }) => {
                 update_time: Date.now(),
                 email_address: userInfo.email
             }
+            console.log(paymentResult)
 
             if(!order || success) {
                 dispatch(getOrderDetails(orderId))
             } else {
-                const res = axios.post(`https://cors-anywhere.herokuapp.com/https://uat.esewa.com.np/epay/transrec?amt=${cart.totalPrice}.00&rid=${refId}&pid=${oId}&scd=EPAYTEST`)
+                const res = axios.post(`https://uat.esewa.com.np/epay/transrec?amt=400.00&rid=${refId}&pid=${orderId}&scd=EPAYTEST`)
                 .then((res) => {
                     return res.data;
                 }).then((str) => {
@@ -57,8 +53,9 @@ const EsewaSuccess = ({ match, history }) => {
                     }
                 })
             }
-        }
 
+        }
+        
     },[success, order, dispatch])
     return (
         <div>
