@@ -19,6 +19,15 @@ const Payment = ({history}) => {
 
     const dispatch = useDispatch();
 
+    const userLogin = useSelector((state) => state.userLogin)
+    const { userInfo } = userLogin;
+
+    useEffect(() => {
+        if(!userInfo) {
+            history.push('/login')
+        }
+    }, [userInfo])
+
     const submitHandler = (e) => {
         e.preventDefault();
         dispatch(savePaymentMethod(paymentMethod))

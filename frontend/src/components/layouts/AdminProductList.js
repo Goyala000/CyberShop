@@ -7,12 +7,14 @@ import { PRODUCT_CREATE_RESET } from '../../actions/types';
 
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
+import Paginate from './contents/Paginate';
 
 const AdminProductList = ({ history, match }) => {
+    const pageNumber = match.params.pageNumber || 1
     const dispatch = useDispatch();
 
     const productList = useSelector(state => state.productList);
-    const { loading, products, error } = productList;
+    const { loading, products, error, page, pages } = productList;
 
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin;
@@ -38,9 +40,9 @@ const AdminProductList = ({ history, match }) => {
         if(successCreate) {
             history.push(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts())
+            dispatch(listProducts('', pageNumber))
         }
-    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
+    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct, pageNumber])
 
     const deleteHandler = (id) => {
         if(window.confirm('Are you sure')) {
@@ -70,6 +72,7 @@ const AdminProductList = ({ history, match }) => {
             {loadingCreate && <Spinner />}
             {errorCreate && <Message variant="danger">{errorCreate}</Message>}
             {loading ? <Spinner /> : error ? <Message variant="danger">{error}</Message> : (
+                <>
                 <Table striped hover responsive bordered className="table-sm">
                     <thead>
                         <tr>
@@ -106,6 +109,8 @@ const AdminProductList = ({ history, match }) => {
                         ))}
                     </tbody>
                 </Table>
+                <Paginate pages={pages} page={page} isAdmin={true}/>
+                </>
             )}
         </div>
     )

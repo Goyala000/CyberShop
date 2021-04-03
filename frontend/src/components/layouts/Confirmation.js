@@ -21,11 +21,17 @@ const Confirmation = ({ history }) => {
 
     const { order, success, error } = orderCreate
 
+    const userLogin = useSelector((state) => state.userLogin)
+    const { userInfo } = userLogin;
+
     useEffect(() => {
+        if(!userInfo) {
+            history.push('/login')
+        }
         if(success) {
             history.push(`/order/${order._id}`)
         }
-    }, [history, success])
+    }, [history, success, userInfo])
     
     const placeOrderHandler = () => {
         dispatch(createOrder({

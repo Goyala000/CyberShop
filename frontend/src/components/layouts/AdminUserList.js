@@ -50,7 +50,7 @@ const AdminUserList = ({ history }) => {
                     </thead>
                     <tbody>
                         {users.map(user => (
-                            <tr key={user._id}>
+                            <tr key={user._id} className="table-warning">
                                 <td>{user._id}</td>
                                 <td>{user.name}</td>
                                 <td>{user.email}</td>

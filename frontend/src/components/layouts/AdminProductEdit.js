@@ -8,6 +8,7 @@ import { productDetail, updateProduct } from '../../actions/productActions';
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
 import { PRODUCT_UPDATE_RESET } from '../../actions/types';
+import axios from 'axios';
 
 const AdminProductEdit = ({match, history}) => {
     const productId = match.params.id;
@@ -20,6 +21,7 @@ const AdminProductEdit = ({match, history}) => {
     const [color, setColor] = useState('');
     const [description, setDescription] = useState('');
     const [countInStock, setCountInStock] = useState(0);
+    const [uploading, setUploading] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -47,7 +49,29 @@ const AdminProductEdit = ({match, history}) => {
                 setCountInStock(product.countInStock)
             }
         }
-    }, [product, history, dispatch, productId, successUpdate])
+    }, [dispatch, history, productId, product, successUpdate]);
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0]
+        const formData = new FormData()
+        formData.append('image', file)
+        setUploading(true)
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            const { data } = await axios.post('/api/uploads', formData, config)
+
+            setImage(data)
+            setUploading(false)
+        } catch (error) {
+            console.error(error)
+            setUploading(false)
+        }
+    }
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -99,6 +123,13 @@ const AdminProductEdit = ({match, history}) => {
                                     placeholder="Enter image url..." 
                                     value={image}
                                     onChange={(e) => setImage(e.target.value)}/>
+                                <Form.File 
+                                    id="image-file" 
+                                    label="Choose File" 
+                                    custom
+                                    onChange={uploadFileHandler}>
+                                </Form.File>
+                                {uploading && <Spinner />}
                             </Form.Group> 
                             <Form.Group controlId="brand">
                                 <Form.Label>Brand</Form.Label>

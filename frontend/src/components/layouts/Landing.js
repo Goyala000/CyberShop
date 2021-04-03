@@ -6,16 +6,20 @@ import Product from '.././Product';
 import { listProducts } from '../../actions/productActions';
 import Spinner from './contents/Spinner';
 import Message from './contents/Message';
+import Paginate from '../layouts/contents/Paginate';
 
-const Landing = () => {
+const Landing = ({ match }) => {
+    const keyword = match.params.keyword
+    const pageNumber = match.params.pageNumber || 1
+
     const dispatch = useDispatch()
 
     const productList = useSelector(state => state.productList);
-    const { products, error, loading } = productList;
+    const { products, error, loading, page, pages } = productList;
 
     useEffect(() => {
-        dispatch(listProducts())
-    }, [dispatch])
+        dispatch(listProducts(keyword, pageNumber))
+    }, [dispatch, keyword, pageNumber])
 
     return (
         <div className="container">
@@ -23,13 +27,18 @@ const Landing = () => {
             {loading ? 
                 <Spinner /> : error ? 
                 <Message message={error}/> : 
-                <Row>
-                    {products.map(product => (
-                        <Col key={product._id} lg={4} sm={12} xl={3} md={6}>
-                            <Product product={product} />
-                        </Col>
-                    ))};
-                </Row>
+                (
+                <>
+                    <Row>
+                        {products && products.map(product => (
+                            <Col key={product._id} lg={4} sm={12} xl={3} md={6}>
+                                <Product product={product} />
+                            </Col>
+                        ))};
+                    </Row>
+                    <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''}/>
+                </>
+                )
             }
             
         </div>

@@ -1,8 +1,10 @@
 import React from 'react';
+import { Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FinalLogo from '../../../assets/FinalLogo.jpg';
 import { Nav, Navbar, Image, NavDropdown } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import SearchBox from '../../layouts/contents/SearchBox';
 import { logOut } from '../../../actions/userActions';
 
 const Header = () => {
@@ -24,6 +26,7 @@ const Header = () => {
             </LinkContainer>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
+                        <Route render={({history}) => <SearchBox history={history} />} />
                         <Nav className="ml-auto">
                             <LinkContainer to="/cart">
                                 <Nav.Link>
@@ -52,7 +55,8 @@ const Header = () => {
                                 </LinkContainer>
                             }
                             {userInfo && userInfo.isAdmin && (
-                                <NavDropdown style={{ marginTop: 18 }} title="Admin" id="adminMenu">
+                                
+                                <NavDropdown style={{ marginTop: 18 }} title={<i class="fas fa-cog"></i>} id="adminMenu">
                                     <LinkContainer to="/admin/productList">
                                         <NavDropdown.Item>Products</NavDropdown.Item>
                                     </LinkContainer>

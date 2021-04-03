@@ -3,16 +3,25 @@ import { Col, ListGroup, Row, Image, Card, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import {Link} from 'react-router-dom';
 import Message from './contents/Message';
-import { createOrder, getOrderDetails } from '../../actions/orderActions';
+import { deliverOrder, getOrderDetails } from '../../actions/orderActions';
 import Esewa from './contents/Esewa';
+import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../../actions/types';
 
-const Orders = ({ match }) => {
+import Spinner from '../layouts/contents/Spinner';
+
+const Orders = ({ match, history }) => {
     const orderId = match.params.id;
 
     const dispatch = useDispatch();
 
     const orderDetails = useSelector((state) => state.orderDetails)
     const { order, loading, error } = orderDetails;
+
+    const userLogin = useSelector((state) => state.userLogin)
+    const { userInfo } = userLogin;
+
+    const orderDeliver = useSelector((state) => state.orderDeliver)
+    const { loading:loadingDeliver, success:successDeliver } = orderDeliver;
 
     if(!loading) {
         // Calculate prices
@@ -27,8 +36,19 @@ const Orders = ({ match }) => {
     
 
     useEffect(() => {
-        dispatch(getOrderDetails(orderId))
-    }, [dispatch, orderId])
+        if(!userInfo) {
+            history.push('/login')
+        }
+        if(!order || successDeliver) {
+            dispatch({ type: ORDER_PAY_RESET})
+            dispatch({ type: ORDER_DELIVER_RESET})
+            dispatch(getOrderDetails(orderId))
+        }
+    }, [dispatch, orderId, order, successDeliver, userInfo])
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(order))
+    }
     
     return loading ? <loading /> : error ? <Message>{error}</Message> : <>
         <h2>Order { order._id}</h2>
@@ -38,7 +58,7 @@ const Orders = ({ match }) => {
                         <ListGroup.Item>
                             <h2>Shipping</h2>
                             <div>
-                                <strong>Name: </strong>{order.user.name}
+                                <strong>Name: </strong>{order.user.name}<br></br>
                                 <strong>Email: </strong><a href={`mailto:${order.user.email}`}>{order.user.email}</a>
                             </div>
                             <p>
@@ -49,11 +69,7 @@ const Orders = ({ match }) => {
                                 {'  '}{order.shippingAddress.address}, {order.shippingAddress.city}{' '},
                                 {' '} {order.shippingAddress.country}
                             </p>
-                            <p>
-                            <i className="fas fa-phone mr-2" />
-                                {order.shippingAddress.phoneNumber} 
-                            </p>
-                            {order.isDelivered ? <Message variant='sucess'>Delivered on {order.deliveredAt}</Message> :
+                            {order.isDelivered ? <><Message variant="success">Delivered on {order.deliveredAt.substring(0,10)}</Message></> :
                             <Message variant="danger">Not Delivered</Message>}
                         </ListGroup.Item>
 
@@ -66,7 +82,7 @@ const Orders = ({ match }) => {
                                 </strong>
                                 {'  '}{order.paymentMethod}
                             </p>
-                            {order.isPaid ? <Message variant='sucess'>Paid on {order.paidAt}</Message> :
+                            {order.isPaid ? <><Message variant="success">Paid on {order.paidAt.substring(0,10)}</Message></> :
                             <Message variant="danger">Not Paid</Message>}
                         </ListGroup.Item>
 
@@ -128,12 +144,21 @@ const Orders = ({ match }) => {
                                     <Col>Rs.{order.totalPrice}</Col>
                                 </Row>
                             </ListGroup.Item>
-                        </ListGroup>
+                        
                         {!order.isPaid && (
                             <ListGroup.Item>
-                                <Esewa amount="400" id={orderId} />
+                                <Esewa amount="100" id={orderId} />
                             </ListGroup.Item>
                         )}
+                        {loadingDeliver && <Spinner />}
+                        {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                            <ListGroup.Item>
+                                <Button type='button' className='btn btn-block' onClick={deliverHandler}>
+                                    Mark as Delivered
+                                </Button>
+                            </ListGroup.Item>
+                        )}
+                        </ListGroup>
                     </Card>
                 </Col>
             </Row> 
