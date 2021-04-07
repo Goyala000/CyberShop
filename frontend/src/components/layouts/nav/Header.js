@@ -56,7 +56,7 @@ const Header = () => {
                             }
                             {userInfo && userInfo.isAdmin && (
                                 
-                                <NavDropdown style={{ marginTop: 18 }} title={<i class="fas fa-cog"></i>} id="adminMenu">
+                                <NavDropdown style={{ marginTop: 18 }} title={<i className="fas fa-2x fa-sliders-h"></i>} id="adminMenu">
                                     <LinkContainer to="/admin/productList">
                                         <NavDropdown.Item>Products</NavDropdown.Item>
                                     </LinkContainer>

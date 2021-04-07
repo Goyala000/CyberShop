@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import FormContainer from '../layouts/contents/FormContainer';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { productDetail, updateProduct } from '../../actions/productActions';
@@ -9,6 +9,7 @@ import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
 import { PRODUCT_UPDATE_RESET } from '../../actions/types';
 import axios from 'axios';
+import Meta from './contents/Meta';
 
 const AdminProductEdit = ({match, history}) => {
     const productId = match.params.id;
@@ -90,14 +91,15 @@ const AdminProductEdit = ({match, history}) => {
 
     return (
         <Fragment>
+            <Meta title='Product Edit' />
             <Link to='/admin/productList' className='btn btn-light my-3'>
                 Go Back
             </Link>
             <FormContainer>
                 <h1 style={{margin: 20, textAlign: "center" }}>Edit Product</h1>
                 {loadingUpdate && <Spinner />}
-                {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
-                {loading ? <Spinner /> : error ? <Message variant="danger">{error}</Message> : (
+                {errorUpdate && <Message variant="primary" message={errorUpdate}/>}
+                {loading ? <Spinner /> : error ? <Message variant="primary" message={error}/> : (
                     <div>
                         <Form onSubmit={submitHandler}>
                             <Form.Group controlId="formBasicName">
@@ -171,7 +173,7 @@ const AdminProductEdit = ({match, history}) => {
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}/>
                             </Form.Group> 
-                            <Button type="submit" className="btn btn-small">Update</Button>
+                            <Button style={{marginTop: '20px'}} type="submit" className="btn btn-small">Update</Button>
                         </Form>
                     </div>
                 )}

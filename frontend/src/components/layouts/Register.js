@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { register } from '../../actions/userActions';
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
+import Meta from './contents/Meta';
 
 const Register = ({location, history}) => {
     const [name, setName] = useState('');
@@ -42,9 +43,11 @@ const Register = ({location, history}) => {
     return (
         <FormContainer>
                 <h1 style={{margin: 20, textAlign: "center" }}>REGISTER</h1>
+                <Meta title='Register' />
                 <div>
-                    {showError && <Message message={msg}></Message>}
-                    {error && <Message message={error}></Message>}
+                    {showError && <Message variant='primary' message={msg} />}
+                    {error && <Message variant='primary' message={error} />}
+                    {loading && <Spinner />}
                     <section>
                         <Form onSubmit={submitHandler}>
                             <Form.Group controlId="formBasicName">

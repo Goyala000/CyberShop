@@ -1,9 +1,9 @@
 import axios from 'axios';
-import React, {useState, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getOrderDetails, payOrder } from '../../../actions/orderActions';
 
-const EsewaSuccess = ({ match, history }) => {
+const EsewaSuccess = ({ history }) => {
     const cart = useSelector(state => state.cart)
 
     // Calculate Price
@@ -18,10 +18,10 @@ const EsewaSuccess = ({ match, history }) => {
     const dispatch = useDispatch();
 
     const orderDetails = useSelector((state) => state.orderDetails)
-    const { order, loading, error } = orderDetails;
+    const { order } = orderDetails;
 
     const orderPay = useSelector((state) => state.orderPay)
-    const { loading:loadingPay, success } = orderPay;
+    const { success } = orderPay;
 
     useEffect(() => { 
         const orderId = window.location.search.split("=")[1].split("&")[0];
@@ -38,7 +38,7 @@ const EsewaSuccess = ({ match, history }) => {
             if(!order || success) {
                 dispatch(getOrderDetails(orderId))
             } else {
-                const res = axios.post(`https://uat.esewa.com.np/epay/transrec?amt=400.00&rid=${refId}&pid=${orderId}&scd=EPAYTEST`)
+                const res = axios.post(`https://uat.esewa.com.np/epay/transrec?amt=${order.totalPrice}&rid=${refId}&pid=${orderId}&scd=EPAYTEST`)
                 .then((res) => {
                     return res.data;
                 }).then((str) => {
@@ -56,9 +56,9 @@ const EsewaSuccess = ({ match, history }) => {
 
         }
         
-    },[success, order, dispatch])
+    },[success, order, dispatch, history, userInfo])
     return (
-        <div>
+        <div style={{marginBottom: '300px'}}>
             <h2>Please wait for a while...</h2>
         </div>
     )

@@ -2,9 +2,10 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { Form, Button, Col } from 'react-bootstrap';
 import FormContainer from './contents/FormContainer';
 import { useSelector, useDispatch } from 'react-redux';
-import Message from '../layouts/contents/Message';
+
 import CheckoutSteps from '../layouts/contents/CheckoutSteps';
 import { savePaymentMethod } from '../../actions/cartActions';
+import Meta from './contents/Meta';
 
 const Payment = ({history}) => {
 
@@ -26,7 +27,7 @@ const Payment = ({history}) => {
         if(!userInfo) {
             history.push('/login')
         }
-    }, [userInfo])
+    }, [userInfo, history])
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -36,17 +37,18 @@ const Payment = ({history}) => {
 
     return (
         <Fragment>
+            <Meta title='Payment' />
             <CheckoutSteps step1 step2 step3/>
             <FormContainer>
             <h2>Payment</h2>
-                <Form onSubmit={submitHandler}>
+                <Form onSubmit={submitHandler} style={{marginBottom: '80px'}}>
                     <Form.Group>
-                        <Form.Label as='legend'>Select Method</Form.Label>
+                        <Form.Label as='legend'>Select Payment Method...</Form.Label>
                     </Form.Group>
                     <Col>
                         <Form.Check 
                             type="radio" 
-                            label='Esewa or Credit Card'
+                            label='Esewa'
                             id='Esewa'
                             name='paymentMethod'
                             value='Esewa'
@@ -58,11 +60,11 @@ const Payment = ({history}) => {
                             label='Cash on Delivery'
                             id='CashDelivery'
                             name='paymentMethod'
-                            value='CashOnDelivery'
+                            value='Cash On Delivery'
                             onChange={(e) => setPaymentMethod(e.target.value)}>    
                         </Form.Check>
                     </Col>
-                    <Button style={{marginTop: "10px"}} type="submit" className="btn btn-info">Continue</Button>
+                    <Button style={{marginTop: "30px"}} type="submit" className="btn btn-info">Continue</Button>
                 </Form>
             </FormContainer>
         </Fragment>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Image, Button, FormControl, ListGroup, Form } from 'react-bootstrap';
+import { Image, Button, FormControl, ListGroup, Form, Table } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { productDetail, createProductReview } from '../../actions/productActions
 import Spinner from './contents/Spinner';
 import Message from './contents/Message';
 import { PRODUCT_CREATE_REVIEW_RESET } from '../../actions/types';
+import Meta from '../layouts/contents/Meta';
 
 const ProductScreen = ({ match, history }) => {
   const [qty, setQty] = useState(1);
@@ -63,7 +64,9 @@ const ProductScreen = ({ match, history }) => {
           </LinkContainer>
 
           {loading ? <Spinner /> : error ? 
-          <Message message={error}/> :
+          <Message variant="danger" message={error}/> :
+          <>
+          <Meta title={product.name} />
             <section>
               <div className="row">
                 <div className="col-md-6 mb-4 mt-5 mb-md-0">
@@ -79,15 +82,15 @@ const ProductScreen = ({ match, history }) => {
                 <div className="col-md-6">
                   <h2>{product.name}</h2>
                     <p className="mb-2 text-muted text-uppercase small">{product.category}</p>
-                    <p className="mt-3"><Rating
+                    <div className="mt-3"><Rating
                             rating={product.rating} 
                             text={`${product.numReviews} reviews`}
                     />
-                    </p>
+                    </div>
                     <p><span className="mr-1"><strong>Price: Rs. {product.price}</strong></span></p>
                     <p className="pt-1">{product.description}</p>
                     <div className="table-responsive">
-                      <table className="table table-sm table-borderless mb-0">
+                      <Table className="table table-sm table-borderless mb-0">
                         <tbody>
                           <tr>
                             <th className="pl-0 w-25" scope="row"><strong>Brand</strong></th>
@@ -103,19 +106,19 @@ const ProductScreen = ({ match, history }) => {
                           </tr> 
                           {product.countInStock > 0 && (
                             <tr>
-                              <th className="pl-0 w-25" scope="row"><strong>Qty</strong></th>
-                              <FormControl style={{width: '100px'}} as="select" value={qty} onChange={(e) => 
-                                setQty(e.target.value)}>
-                                  {[...Array(product.countInStock).keys()].map((x) => (
-                                    <option key={x+1} value={x+1}>
-                                      {x+1}
-                                    </option>
-                                  ))}
-                              </FormControl>
+                                <th className="pl-0 w-25" scope="row"><strong>Qty</strong></th>
+                                <FormControl style={{width: '100px'}} as="select" value={qty} onChange={(e) => 
+                                  setQty(e.target.value)}>
+                                    {[...Array(product.countInStock).keys()].map((x) => (
+                                      <option key={x+1} value={x+1}>
+                                        {x+1}
+                                      </option>
+                                    ))}
+                                </FormControl>
                             </tr>
                           )}
                         </tbody>
-                      </table>
+                      </Table>
                     </div>
                 <div className="mt-4">
                   <Button onClick={addToCartBtn} disabled={product.countInStock===0} type="button" className="btn btn-primary btn-md mr-1 mb-2"><i
@@ -125,7 +128,7 @@ const ProductScreen = ({ match, history }) => {
           </div>
           <div style={{marginTop: '20px'}}>
             <h3>Reviews</h3>
-              {product.reviews && product.reviews.length === 0 && <Message>No Reviews</Message>}
+              {product.reviews && product.reviews.length === 0 && <Message variant='info' message='No Reviews' />}
               <ListGroup variant="flush">
                 {product.reviews && product.reviews.map(review => (
                   <ListGroup.Item key={review._id}>
@@ -138,7 +141,7 @@ const ProductScreen = ({ match, history }) => {
                   <ListGroup.Item>
                       <h4>Write a Customer Review</h4>
                       {err && <Message variant='danger'>Fields cant be empty.</Message>}
-                      {errorProductReview && <Message variant='danger'>{errorProductReview}</Message>}
+                      {errorProductReview && <Message variant='primary' message={errorProductReview} />}
                       {userInfo ? (
                         <Form onSubmit={submitHandler}>
                           <Form.Group controlId='rating'>
@@ -163,11 +166,12 @@ const ProductScreen = ({ match, history }) => {
                           </Form.Group>
                           <Button type='submit' variant='warning'>Post</Button>
                         </Form>
-                      ) : <Message>Please <Link to='/login'>Login</Link>to write a review'</Message>}
+                      ) : <Message variant='info' message={`Please ${<Link to='/login'>Login</Link>}to write a review`} />}
                     </ListGroup.Item>
                   </ListGroup>
           </div>
         </section>
+        </>
         }
       </div>
       

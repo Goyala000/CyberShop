@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import FormContainer from '../layouts/contents/FormContainer';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUserDetails, updateUser } from '../../actions/userActions';
@@ -8,6 +8,7 @@ import { USER_UPDATE_RESET } from '../../actions/types';
 
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
+import Meta from './contents/Meta';
 
 const AdminUserEdit = ({match, history}) => {
     const userId = match.params.id;
@@ -46,14 +47,15 @@ const AdminUserEdit = ({match, history}) => {
 
     return (
         <Fragment>
+            <Meta title='User Edit' />
             <Link to='/admin/userList' className='btn btn-light my-3'>
                 Go Back
             </Link>
             <FormContainer>
                 <h1 style={{margin: 20, textAlign: "center" }}>Edit User</h1>
                 {loadingUpdate && <Spinner />}
-                {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
-                {loading ? <Spinner /> : error ? <Message variant="danger">{error}</Message> : (
+                {errorUpdate && <Message variant="primary" message={errorUpdate} />}
+                {loading ? <Spinner /> : error ? <Message variant="primary" message={error} />: (
                     <div>
                         <Form onSubmit={submitHandler}>
                             <Form.Group controlId="formBasicName">

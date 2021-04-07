@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, {useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
 import { Table, Button, Row, Col } from 'react-bootstrap';
@@ -7,14 +7,13 @@ import { PRODUCT_CREATE_RESET } from '../../actions/types';
 
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
-import Paginate from './contents/Paginate';
+import Meta from './contents/Meta';
 
-const AdminProductList = ({ history, match }) => {
-    const pageNumber = match.params.pageNumber || 1
+const AdminProductList = ({ history }) => {
     const dispatch = useDispatch();
 
     const productList = useSelector(state => state.productList);
-    const { loading, products, error, page, pages } = productList;
+    const { loading, products, error } = productList;
 
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin;
@@ -40,9 +39,9 @@ const AdminProductList = ({ history, match }) => {
         if(successCreate) {
             history.push(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts('', pageNumber))
+            dispatch(listProducts())
         }
-    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct, pageNumber])
+    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
 
     const deleteHandler = (id) => {
         if(window.confirm('Are you sure')) {
@@ -56,6 +55,7 @@ const AdminProductList = ({ history, match }) => {
 
     return (
         <div className="container">
+            <Meta title='Product List' />
             <Row className='align-items-center'>
                 <Col>
                     <h2>Products</h2>
@@ -68,10 +68,10 @@ const AdminProductList = ({ history, match }) => {
 
             </Row>
             {loadingDelete && <Spinner />}
-            {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+            {errorDelete && <Message variant="primary" message={errorDelete} />}
             {loadingCreate && <Spinner />}
-            {errorCreate && <Message variant="danger">{errorCreate}</Message>}
-            {loading ? <Spinner /> : error ? <Message variant="danger">{error}</Message> : (
+            {errorCreate && <Message variant="primary" message={errorCreate} />}
+            {loading ? <Spinner /> : error ? <Message variant="primary" message={error} /> : (
                 <>
                 <Table striped hover responsive bordered className="table-sm">
                     <thead>
@@ -109,7 +109,7 @@ const AdminProductList = ({ history, match }) => {
                         ))}
                     </tbody>
                 </Table>
-                <Paginate pages={pages} page={page} isAdmin={true}/>
+                
                 </>
             )}
         </div>

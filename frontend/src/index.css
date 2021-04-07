@@ -10,12 +10,48 @@ p {
     .nav-link, .navbar-brand {
         margin-bottom: 6px;
     }
+    .chckOut {
+        padding: 0px 100px 0px 100px;
+    }
+}
+
+@media (max-width: 992px) {
+    .carouselBox {
+        margin-top: 120px;
+    }
+    .ordName {
+        margin: 110px 0px 0px 20px;
+        font-size: 22px;
+    }
 }
 
 
-/********** Card ********/
-.card {
-    height: 375px;
+@media (min-width: 575px) {
+    .searchForm {
+        padding-top: 20px;
+        margin-left: -50px;
+    }
+}
+
+@media (max-width: 575px) {
+    .chckOut {
+        padding-left: 16px;
+    }
+    
+}
+
+
+@media (max-width: 768px) {
+    .imgName {
+        height: 80px;
+        width: 120px;
+        margin-bottom: 10px;
+    }
+    .ordImg {
+        height: 80px;
+        width: 120px;
+        margin-bottom: 10px;
+    }
 }
 
 
@@ -86,3 +122,85 @@ p {
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.3);
     margin: 28px 40px 25px 40px;
 }
+
+.whiteCol {
+    color: white;
+}
+
+footer {
+    margin-top: 30px;
+}
+
+.useFul ul li a.whiteCol {
+    color: white;
+}
+
+.eSewaFail {
+    margin-top: 150px;
+    margin-bottom: 300px;
+}
+
+
+
+/* Checkout */
+.chckOut {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    justify-items: center;
+}
+
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 13px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #1a1a1a;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #1a1a1a; 
+  }
+
+
+  /* Carousel */
+  .carousel-item-next,
+  .carousel-item-prev,
+  .carousel-item-active {
+      display: flex;
+  }
+
+  .carousel-caption {
+      position: absolute;
+      top: 0
+  }
+
+  .carousel-caption h3 {
+      color: #fff;
+  }
+
+  .carousel img {
+    height: 300px;
+    padding: 30px;
+    margin: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .carousel a {
+      margin: 0 auto;
+  }
+
+  .bckBtn {
+      margin-left: 10px;
+  }

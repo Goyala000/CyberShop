@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import { Col, ListGroup, Row, Image, Card, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import CheckoutSteps from './contents/CheckoutSteps';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Message from './contents/Message';
 import { createOrder } from '../../actions/orderActions';
+import Meta from './contents/Meta';
 
 const Confirmation = ({ history }) => {
     const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const Confirmation = ({ history }) => {
         if(success) {
             history.push(`/order/${order._id}`)
         }
+        // eslint-disable-next-line
     }, [history, success, userInfo])
     
     const placeOrderHandler = () => {
@@ -48,11 +50,12 @@ const Confirmation = ({ history }) => {
     return (
         <div>
             <CheckoutSteps step1 step2 step3 step4/>
-            <Row>
+            <Meta title='Confirmation' />
+            <Row style={{marginBottom: '70px'}}>
                 <Col md={8}>
                     <ListGroup variant="flush">
                         <ListGroup.Item>
-                            <h2>Shipping</h2>
+                            <h2 style={{color: 'blue'}}>Shipping</h2>
                             <p>
                                 <strong>
                                 <i className="fas fa-home mr-2" />
@@ -68,7 +71,7 @@ const Confirmation = ({ history }) => {
                         </ListGroup.Item>
 
                         <ListGroup.Item>
-                            <h2>Payment Method</h2>
+                            <h2 style={{color: 'blue'}}>Payment Method</h2>
                             <p>
                                 <strong>
                                 <i className="fas fa-money mr-2" />
@@ -79,22 +82,22 @@ const Confirmation = ({ history }) => {
                         </ListGroup.Item>
 
                         <ListGroup.Item>
-                            <h2>Order Items</h2>
-                            {cart.cartItems.length === 0 ? <Message>Your Cart is Empty</Message> : (
+                            <h2 style={{color: 'blue'}}>Order Items</h2>
+                            {cart.cartItems.length === 0 ? <Message variant='primary' message="Your Cart is Empty" /> : (
                                 <ListGroup variant="flush">
                                     {cart.cartItems.map((item, index) => (
                                         <ListGroup.Item key={index}>
                                             <Row>
                                                 <Col md={1}>
                                                     <Image src={item.image} alt={item.name} 
-                                                    fluid rounded />
+                                                    fluid rounded className='imgName'/>
                                                 </Col>
                                                 <Col>
                                                     <Link to={`/product/${item.product }`}>
-                                                        {item.name}
+                                                        <p>{item.name}</p>
                                                     </Link>
                                                 </Col>
-                                                <Col md={5}>
+                                                <Col md={5} style={{fontSize: '15px'}}>
                                                     {item.qty} x Rs.{item.price} = Rs.{item.qty * 
                                                     item.price}
                                                 </Col>
@@ -137,10 +140,10 @@ const Confirmation = ({ history }) => {
                                 </Row>
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                {error && <Message>{error}</Message>}
+                                {error && <Message variant='primary' message={error} />}
                             </ListGroup.Item>
                             <ListGroup.Item>
-                                <Button type="button" className='btn-block' disabled={
+                                <Button type="button" className='btn-block btn-info' disabled={
                                     cart.cartItems===0
                                 } onClick={placeOrderHandler}>Place Order</Button>
                             </ListGroup.Item>

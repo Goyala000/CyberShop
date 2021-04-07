@@ -40,16 +40,14 @@ const App = props => {
                     <Route path='/esewa/success' component={EsewaSuccess} />
                     <Route path='/esewa/fail' component={EsewaFail} />
                     <Route path='/search/:keyword' component={Landing} exact />
-                    <Route path='/page/:pageNumber' component={Landing} exact />
-                    <Route path='/search/:keyword/page/:pageNumber' component={Landing} exact />
 
                     <Route path='/admin/userList' component={AdminUserList} />
                     <Route path='/admin/user/:id/edit' component={AdminUserEdit} />
                     <Route path='/admin/productList' component={AdminProductList} exact/>
-                    <Route path='/admin/productList/:pageNumber' component={AdminProductList} exact/>
                     <Route path='/admin/product/:id/edit' component={AdminProductEdit} />
                     <Route path='/admin/orderList' component={AdminOrderList} />
                 </div>
+                <Footer />
         </Router>     
     );
 };

@@ -6,6 +6,7 @@ import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
 import { getUserDetails, updateUserDetails } from '../../actions/userActions';
 import { listMyOrders } from '../../actions/orderActions';
+import Meta from './contents/Meta';
 
 const UserProfile = ({ history }) => {
     const [name, setName] = useState('');
@@ -48,7 +49,11 @@ const UserProfile = ({ history }) => {
         if(password !== confirmPassword) {
             setShowError(true)
             setMsg('Passwords do not match')
-        } else {
+        } else if(password === '' || confirmPassword === '') {
+            setShowError(true)
+            setMsg('Password cannot be empty')
+        }
+        else {
             setShowError(false)
             // Dispatch Update Profile
             dispatch(updateUserDetails({ id: user._id, name, email, password}))
@@ -60,10 +65,12 @@ const UserProfile = ({ history }) => {
             <Col md={3}>
             <h3 style={{textAlign: "center" }}>User Profile</h3>
                     <div>
-                        {showError && <Message message={msg}></Message>}
-                        {error && <Message message={error}></Message>}
-                        {success && <Message message="Profile Updated"></Message>}
+                        {showError && <Message variant='primary' message={msg} />}
+                        {error && <Message variant='primary' message={error} />}
+                        {success && <Message variant='warning' message="Profile Updated" />}
+                        {loading && <Spinner />}
                         <section>
+                            <Meta title={user.name} />
                             <Form onSubmit={submitHandler}>
                                 <Form.Group controlId="formBasicName">
                                     <Form.Label>Name</Form.Label>
@@ -80,9 +87,6 @@ const UserProfile = ({ history }) => {
                                         placeholder="Enter email" 
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}/>
-                                    <Form.Text className="text-muted">
-                                    We'll never share your email with anyone else.
-                                    </Form.Text>
                                 </Form.Group>
                                 <Form.Group controlId="formBasicPassword1">
                                     <Form.Label>Password</Form.Label>
@@ -108,7 +112,8 @@ const UserProfile = ({ history }) => {
             </Col>
             <Col md={9}>
                 <h3>My Orders</h3>
-                {loadingOrders ? <Spinner /> : errorOrders ? <Message variant="danger">{errorOrders}</Message> :
+                {loadingOrders ? <Spinner /> : errorOrders ? <Message variant="primary" message={errorOrders} /> :
+                orders.length === 0 ? <Message variant='warning' message='You order history is empty' /> :
                 (
                     <Table striped bordered hover responsive className='table-sm'>
                         <thead>

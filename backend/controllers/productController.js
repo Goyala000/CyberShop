@@ -5,20 +5,17 @@ import asyncHandler from 'express-async-handler';
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-    const pageSize = 2
-    const page = Number(req.query.pageNumber) || 1
+    
     const keyword = req.query.keyword ? {
         name: {
             $regex: req.query.keyword,
-            $options: 'i'
-        }
+            $options: 'i',
+        },
     } : {}
 
-    const count = await Product.countDocuments({...keyword})
     const products = await Product.find({...keyword})
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-    res.json({products, page, pages: Math.ceil(count / pageSize) });
+        
+    res.json(products);
 });
 
 
@@ -146,11 +143,23 @@ const createProductReview = asyncHandler(async (req, res) => {
 });
 
 
+// @desc    Get top rated products
+// @route   Get /api/products/top
+// @access  Public
+const getTopProducts = asyncHandler(async (req, res) => {
+    
+    const products = await Product.find({}).sort({ rating: -1}).limit(7)
+
+    res.json(products)
+});
+
+
 export {
     getProducts,
     getProductById,
     deleteProduct,
     createProduct,
     updateProduct,
-    createProductReview
+    createProductReview,
+    getTopProducts
 }

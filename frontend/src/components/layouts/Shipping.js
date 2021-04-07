@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Message from '../layouts/contents/Message';
 import CheckoutSteps from '../layouts/contents/CheckoutSteps';
 import { saveShippingAddress } from '../../actions/cartActions';
+import Meta from './contents/Meta';
 
 const Shipping = ({history}) => {
 
@@ -33,7 +34,7 @@ const Shipping = ({history}) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+        var re = /^[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-/\s.]?[0-9]{4}$/;
         if(address === "" || city === "" || phoneNumber === "") {
             setShowError(true)
             setMsg('Fields cant be empty')
@@ -49,10 +50,11 @@ const Shipping = ({history}) => {
 
     return (
         <Fragment>
+            <Meta title='Shipping' />
             <CheckoutSteps step1 step2 />
             <FormContainer>
             <h2>Shipping</h2>
-                {showError && <Message message={msg}></Message>}
+                {showError && <Message variant='danger' message={msg} />}
                 <Form onSubmit={submitHandler}>
                     <Form.Group controlId="formBasicAddress">
                         <Form.Label>Address</Form.Label>
@@ -68,7 +70,7 @@ const Shipping = ({history}) => {
                             <Form.Control
                                 type="text" 
                                 placeholder="Country..." 
-                                value={country}>
+                                defaultValue={country}>
                             </Form.Control>
                     </Form.Group>
                     <Form.Group controlId="formBasicCity">
@@ -89,7 +91,7 @@ const Shipping = ({history}) => {
                                 onChange={(e) => setPhoneNumber(e.target.value)}>
                             </Form.Control>
                     </Form.Group>
-                    <Button type="submit" className="btn btn-info">Continue</Button>
+                    <Button style={{marginTop: '20px'}} type="submit" className="btn btn-info">Continue</Button>
                 </Form>
             </FormContainer>
         </Fragment>

@@ -6,6 +6,7 @@ import FormContainer from '../layouts/contents/FormContainer';
 import { login } from '../../actions/userActions';
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
+import Meta from './contents/Meta';
 
 const Login = ({ location, history  }) => {
     const [email, setEmail] = useState('');
@@ -39,11 +40,12 @@ const Login = ({ location, history  }) => {
     return (
         <FormContainer>
                 <h1 style={{margin: 20, textAlign: "center" }}>LOG IN</h1>
+                <Meta title='Log In' />
                 {loading && <Spinner />}
                 <div className="loginForm">
                     <div>
-                    {showError && <Message message="Email and password field cant be empty"></Message>}
-                    {error && <Message message={error}></Message>}
+                    {showError && <Message variant='primary' message="Email and password field cant be empty" />}
+                    {error && <Message variant='primary' message={error} />}
                         <h3>Welcome to CyberShop</h3>
                     </div> 
                     <section>

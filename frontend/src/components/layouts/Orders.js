@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { Col, ListGroup, Row, Image, Card, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Message from './contents/Message';
+import Meta from '../layouts/contents/Meta';
 import { deliverOrder, getOrderDetails } from '../../actions/orderActions';
 import Esewa from './contents/Esewa';
 import { ORDER_DELIVER_RESET, ORDER_PAY_RESET } from '../../actions/types';
@@ -22,6 +23,9 @@ const Orders = ({ match, history }) => {
 
     const orderDeliver = useSelector((state) => state.orderDeliver)
     const { loading:loadingDeliver, success:successDeliver } = orderDeliver;
+
+    const orderPay = useSelector((state) => state.orderPay)
+    const { success } = orderPay;
 
     if(!loading) {
         // Calculate prices
@@ -43,15 +47,18 @@ const Orders = ({ match, history }) => {
             dispatch({ type: ORDER_PAY_RESET})
             dispatch({ type: ORDER_DELIVER_RESET})
             dispatch(getOrderDetails(orderId))
+        } if(success) {
+            window.location.reload()
         }
-    }, [dispatch, orderId, order, successDeliver, userInfo])
+    }, [dispatch, orderId, order, successDeliver, userInfo, success])
 
     const deliverHandler = () => {
         dispatch(deliverOrder(order))
     }
     
-    return loading ? <loading /> : error ? <Message>{error}</Message> : <>
-        <h2>Order { order._id}</h2>
+    return loading ? <Spinner /> : error ? <Message variant='primary' message={error} /> : <>
+        <h2 className='ordName'>Order { order._id }</h2>
+        <Meta title={`Order ${order._id}`} />
         <Row>
                 <Col md={8}>
                     <ListGroup variant="flush">
@@ -69,8 +76,8 @@ const Orders = ({ match, history }) => {
                                 {'  '}{order.shippingAddress.address}, {order.shippingAddress.city}{' '},
                                 {' '} {order.shippingAddress.country}
                             </p>
-                            {order.isDelivered ? <><Message variant="success">Delivered on {order.deliveredAt.substring(0,10)}</Message></> :
-                            <Message variant="danger">Not Delivered</Message>}
+                            {order.isDelivered ? <><Message variant="warning" message={`Delivered on ${order.deliveredAt.substring(0,10)}`} /></> :
+                            <Message variant="primary" message='Not Delivered' />}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
@@ -82,20 +89,20 @@ const Orders = ({ match, history }) => {
                                 </strong>
                                 {'  '}{order.paymentMethod}
                             </p>
-                            {order.isPaid ? <><Message variant="success">Paid on {order.paidAt.substring(0,10)}</Message></> :
-                            <Message variant="danger">Not Paid</Message>}
+                            {order.isPaid ? <><Message variant="warning" message={`Paid on ${order.paidAt.substring(0,10)}`} /></> :
+                            <Message variant="primary" message="Not Paid" />}
                         </ListGroup.Item>
 
                         <ListGroup.Item>
                             <h2>Order Items</h2>
-                            {order.orderItems.length === 0 ? <Message>Order is Empty</Message> : (
+                            {order.orderItems.length === 0 ? <Message variant='primary' message='Order is Empty' /> : (
                                 <ListGroup variant="flush">
                                     {order.orderItems.map((item, index) => (
                                         <ListGroup.Item key={index}>
                                             <Row>
                                                 <Col md={1}>
                                                     <Image src={item.image} alt={item.name} 
-                                                    fluid rounded />
+                                                    fluid rounded className='ordImg'/>
                                                 </Col>
                                                 <Col>
                                                     <Link to={`/product/${item.product }`}>
@@ -147,7 +154,7 @@ const Orders = ({ match, history }) => {
                         
                         {!order.isPaid && (
                             <ListGroup.Item>
-                                <Esewa amount="100" id={orderId} />
+                                <Esewa amount={order.totalPrice} id={orderId} />
                             </ListGroup.Item>
                         )}
                         {loadingDeliver && <Spinner />}

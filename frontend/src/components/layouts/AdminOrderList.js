@@ -1,11 +1,12 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button, Row, Col } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import { listOrders } from '../../actions/orderActions';
 
 import Message from '../layouts/contents/Message';
 import Spinner from '../layouts/contents/Spinner';
+import Meta from './contents/Meta';
 
 const AdminOrderList = ({ history, match }) => {
     const dispatch = useDispatch();
@@ -28,8 +29,9 @@ const AdminOrderList = ({ history, match }) => {
     return (
         <div className="container">
             <h2>Orders</h2>
+            <Meta title='Order List' />
                
-            {loading ? <Spinner /> : error ? <Message variant="danger">{error}</Message> : (
+            {loading ? <Spinner /> : error ? <Message variant="primary" message={error} /> : (
                 <Table striped hover responsive bordered className="table-sm">
                     <thead>
                         <tr>

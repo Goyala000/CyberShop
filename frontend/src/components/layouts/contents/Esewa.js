@@ -11,7 +11,7 @@ const Esewa = ({amount, id}) => {
             psc: 0,
             pdc: 0,
             txAmt: 0,
-            tAmt: amount,
+            tAmt: String(amount),
             pid: String(id),
             scd: "EPAYTEST",
             su: "http://localhost:3000/esewa/success",
@@ -35,7 +35,7 @@ const Esewa = ({amount, id}) => {
     }
 
     return (  
-        <Button onClick={paymentHandler}>Pay with eSewa</Button>
+        <Button onClick={paymentHandler} style={{backgroundColor: '#61bc47'}}>Pay with Esewa</Button>
         
     )
 }
